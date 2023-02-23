@@ -1,4 +1,4 @@
-//axios import buraya gelecek
+import axios from 'axios';
 
 var benimIP;
 
@@ -7,27 +7,27 @@ var benimIP;
 // licensed to Ergineer 2022
 require("babel-core/register");
 require("babel-polyfill");
-async function ipAdresimiAl(){
+async function ipAdresimiAl() {
 	await axios({
 		method: 'get',
 		url: 'https://apis.ergineer.com/ipadresim',
 	})
-	.then(function (response) {
-		return response.data
-	})
-	.then(function (a) {
-		benimIP=a
-	});
-}				
+		.then(function (response) {
+			return response.data
+		})
+		.then(function (a) {
+			benimIP = a
+		});
+}
 // ------------ değiştirmeyin --------------
 
 
 /*
 	ADIM 1: axios kullanarak, aşağıdaki URL'ye GET sorgusu atacağız
-    (tag içindeki yere kendi ipnizi yazarak URL'yi oluşturun):
-    https://apis.ergineer.com/ipgeoapi/<ipniz>
+	(tag içindeki yere kendi ipnizi yazarak URL'yi oluşturun):
+	https://apis.ergineer.com/ipgeoapi/<ipniz>
 	
-	NOT: Bilgisayarın IP adresini öğrenmek için: https://apis.ergineer.com/ipadresim 
+	NOT: Bilgisayarın IP adresini öğrenmek için: https://apis.ergineer.com/ipadresim    85.107.107.86
 	ADIM 5'e gelene kadar fonksiyonunuzu test etmek için ip nizi URL'ye manuel olarak ekleyebilirsiniz.
 */
 
@@ -38,7 +38,7 @@ async function ipAdresimiAl(){
 */
 /*
 	ADIM 3: Argümanı sadece 1 nesne kabül eden bir fonksiyon oluşturun.
-    DOM metotlarını ve özelliklerini kullanarak, şunları gerçekleştirin:
+	DOM metotlarını ve özelliklerini kullanarak, şunları gerçekleştirin:
 	
 	<div class="card">
 	<img src={ülke bayrağı url} />
@@ -51,7 +51,7 @@ async function ipAdresimiAl(){
 		<p>Para birimi: {para birimi}</p>
 		<p>ISP: {isp}</p>
 	</div>
-    </div>
+	</div>
 */
 
 /*
@@ -70,3 +70,70 @@ async function ipAdresimiAl(){
 
 
 //kodlar buraya gelecek
+
+
+
+
+function cardInfo(info) {
+	const newCard = document.createElement("div");
+	newCard.classList.add("card");
+
+	const image = document.createElement("img");
+	image.setAttribute("src", info.ülkebayrağı)
+
+	const card = document.createElement("div");
+	card.classList.add("card-info");
+
+	const iPAdress = document.createElement("h3");
+	iPAdress.classList.add("ip");
+
+	const country = document.createElement("p");
+	country.classList.add("ulke");
+
+	const LatLong = document.createElement("p");
+
+	const city = document.createElement("p");
+
+	const time = document.createElement("p");
+
+	const money = document.createElement("p");
+
+	const isp = document.createElement("p");
+
+
+	newCard.append(image, card);
+
+	card.append(iPAdress);
+	card.append(country);
+	card.append(LatLong);
+	card.append(city);
+	card.append(time);
+	card.append(money);
+	card.append(isp);
+
+
+	iPAdress.textContent = info.sorgu;
+	country.textContent = `${info.ülke} (${info.ülkeKodu})`
+	LatLong.textContent = `Enlem: ${info.enlem}  Boylam: ${info.boylam}`;
+	city.textContent = `şehir: ${info.şehir}`;
+	time.textContent = `Saat dilimi: ${info.saatdilimi}`;
+	money.textContent = `Para birimi: ${info.parabirimi}`;
+	isp.textContent = `ISP: ${info.isp}`;
+
+	return newCard;
+}
+
+const newCard = document.querySelector(".cards");
+
+
+const connect = async function () {
+	await ipAdresimiAl();
+	axios
+		.get("https://apis.ergineer.com/ipgeoapi/" + benimIP)
+		.then((res) => {
+			newCard.append(cardInfo(res.data));
+		})
+};
+
+connect();
+
